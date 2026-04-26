@@ -28,10 +28,8 @@
     }
 
     /* ── Auth Screen ── */
-    #auth-screen { display: none; }
-    #auth-screen.active { display: block; }
+    #auth-screen { display: block; }   /* standardmäßig sichtbar */
     #app-screen  { display: none; }
-    #app-screen.active  { display: block; }
 
     .auth-header {
       background: #2c5282;
@@ -776,18 +774,18 @@
     await supabase.auth.signOut();
   }
 
-  // Auth State Listener — zeigt entweder Auth- oder App-Screen
-  supabase.auth.onAuthStateChange((_event, session) => {
-    const authEl = document.getElementById('auth-screen');
-    const appEl  = document.getElementById('app-screen');
-    if (session) {
-      authEl.classList.remove('active');
-      appEl.classList.add('active');
-    } else {
-      appEl.classList.remove('active');
-      authEl.classList.add('active');
-    }
-  });
+  // Auth State — Auth-Screen ist Standard, App nur wenn eingeloggt
+  function updateScreens(session) {
+    document.getElementById('auth-screen').style.display = session ? 'none'  : 'block';
+    document.getElementById('app-screen').style.display  = session ? 'block' : 'none';
+    if (session) loadSettings();
+  }
+
+  // Sofort beim Laden Session prüfen
+  supabase.auth.getSession().then(({ data: { session } }) => updateScreens(session));
+
+  // Auf Änderungen reagieren (Login / Logout)
+  supabase.auth.onAuthStateChange((_event, session) => updateScreens(session));
 
   // ══════════════════════════════════════════════════════════════════════
   // SETTINGS
