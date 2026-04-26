@@ -95,7 +95,7 @@
     }
 
     .settings-panel.open {
-      max-height: 700px;
+      max-height: 1100px;
       padding: 24px 28px;
     }
 
@@ -494,9 +494,29 @@
         <input class="s-input" type="text" id="s_firmenname" placeholder="z. B. Muster Bau GmbH">
       </div>
 
+      <div class="full-width">
+        <label class="s-label" for="s_strasse">Straße &amp; Hausnummer</label>
+        <input class="s-input" type="text" id="s_strasse" placeholder="z. B. Hauptstraße 12">
+      </div>
+
+      <div>
+        <label class="s-label" for="s_plz">PLZ</label>
+        <input class="s-input" type="text" id="s_plz" placeholder="1010">
+      </div>
+
+      <div>
+        <label class="s-label" for="s_ort">Ort</label>
+        <input class="s-input" type="text" id="s_ort" placeholder="Wien">
+      </div>
+
       <div>
         <label class="s-label" for="s_telefon">Telefon</label>
         <input class="s-input" type="text" id="s_telefon" placeholder="+43 664 …">
+      </div>
+
+      <div>
+        <label class="s-label" for="s_email">E-Mail</label>
+        <input class="s-input" type="text" id="s_email" placeholder="office@firma.at">
       </div>
 
       <div>
@@ -504,14 +524,24 @@
         <input class="s-input" type="text" id="s_website" placeholder="www.beispiel.at">
       </div>
 
+      <div>
+        <label class="s-label" for="s_uid">UID-Nummer</label>
+        <input class="s-input" type="text" id="s_uid" placeholder="ATU12345678">
+      </div>
+
       <div class="full-width">
         <label class="s-label" for="s_iban">IBAN</label>
         <input class="s-input" type="text" id="s_iban" placeholder="AT12 3456 7890 1234 5678">
       </div>
 
-      <div class="full-width">
+      <div>
+        <label class="s-label" for="s_bic">BIC</label>
+        <input class="s-input" type="text" id="s_bic" placeholder="z. B. BKAUATWW">
+      </div>
+
+      <div>
         <label class="s-label" for="s_bankname">Bankname</label>
-        <input class="s-input" type="text" id="s_bankname" placeholder="z. B. Raiffeisen Bank">
+        <input class="s-input" type="text" id="s_bankname" placeholder="z. B. Bank Austria">
       </div>
     </div>
 
@@ -605,11 +635,17 @@
   // ── Settings ─────────────────────────────────────────────────────────────────
   let settings = {
     firmenname: '',
-    telefon: '',
-    website: '',
-    iban: '',
-    bankname: '',
-    logo: ''   // base64 data URL
+    strasse:    '',
+    plz:        '',
+    ort:        '',
+    telefon:    '',
+    email:      '',
+    website:    '',
+    uid:        '',
+    iban:       '',
+    bic:        '',
+    bankname:   '',
+    logo:       ''
   };
 
   function loadSettings() {
@@ -619,9 +655,15 @@
     } catch(e) {}
 
     document.getElementById('s_firmenname').value = settings.firmenname;
+    document.getElementById('s_strasse').value    = settings.strasse;
+    document.getElementById('s_plz').value        = settings.plz;
+    document.getElementById('s_ort').value        = settings.ort;
     document.getElementById('s_telefon').value    = settings.telefon;
+    document.getElementById('s_email').value      = settings.email;
     document.getElementById('s_website').value    = settings.website;
+    document.getElementById('s_uid').value        = settings.uid;
     document.getElementById('s_iban').value       = settings.iban;
+    document.getElementById('s_bic').value        = settings.bic;
     document.getElementById('s_bankname').value   = settings.bankname;
 
     if (settings.logo) {
@@ -640,9 +682,15 @@
 
   function saveSettings() {
     settings.firmenname = document.getElementById('s_firmenname').value.trim();
+    settings.strasse    = document.getElementById('s_strasse').value.trim();
+    settings.plz        = document.getElementById('s_plz').value.trim();
+    settings.ort        = document.getElementById('s_ort').value.trim();
     settings.telefon    = document.getElementById('s_telefon').value.trim();
+    settings.email      = document.getElementById('s_email').value.trim();
     settings.website    = document.getElementById('s_website').value.trim();
+    settings.uid        = document.getElementById('s_uid').value.trim();
     settings.iban       = document.getElementById('s_iban').value.trim();
+    settings.bic        = document.getElementById('s_bic').value.trim();
     settings.bankname   = document.getElementById('s_bankname').value.trim();
 
     try {
@@ -840,9 +888,15 @@
 
     // Unternehmens-Einstellungen mitsenden
     formData.append('firmenname', settings.firmenname);
+    formData.append('strasse',    settings.strasse);
+    formData.append('plz',        settings.plz);
+    formData.append('ort',        settings.ort);
     formData.append('telefon',    settings.telefon);
+    formData.append('email',      settings.email);
     formData.append('website',    settings.website);
+    formData.append('uid',        settings.uid);
     formData.append('iban',       settings.iban);
+    formData.append('bic',        settings.bic);
     formData.append('bankname',   settings.bankname);
     if (settings.logo) {
       formData.append('logo', settings.logo);
