@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Angebot-Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,7 +27,111 @@
       overflow: hidden;
     }
 
-    /* ── Header ── */
+    /* ── Auth Screen ── */
+    #auth-screen { display: none; }
+    #auth-screen.active { display: block; }
+    #app-screen  { display: none; }
+    #app-screen.active  { display: block; }
+
+    .auth-header {
+      background: #2c5282;
+      padding: 32px 32px 28px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .auth-header h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+    .auth-header p  { font-size: 14px; opacity: .70; }
+
+    .auth-tabs {
+      display: flex;
+      border-bottom: 1.5px solid #e2e8f0;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 13px;
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #a0aec0;
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      margin-bottom: -1.5px;
+      transition: color .15s, border-color .15s;
+    }
+
+    .auth-tab.active {
+      color: #2c5282;
+      border-bottom-color: #2c5282;
+    }
+
+    .auth-body { padding: 28px 32px; }
+
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+
+    .auth-group { margin-bottom: 16px; }
+
+    .auth-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #4a5568;
+      margin-bottom: 6px;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 15px;
+      color: #2d3748;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    .auth-input:focus { border-color: #2c5282; background: #fff; }
+
+    .btn-auth {
+      width: 100%;
+      margin-top: 8px;
+      padding: 13px;
+      background: #2c5282;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: background .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-auth:hover:not(:disabled) { background: #2a4a7f; }
+    .btn-auth:disabled { background: #a0aec0; cursor: not-allowed; }
+
+    .auth-toast {
+      margin-top: 14px;
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+
+    .auth-toast.error   { display: block; background: #fff5f5; border: 1.5px solid #fc8181; color: #9b2c2c; }
+    .auth-toast.success { display: block; background: #f0fff4; border: 1.5px solid #68d391; color: #276749; }
+    .auth-toast.loading { display: flex; align-items: center; justify-content: center; gap: 10px; background: #ebf8ff; border: 1.5px solid #63b3ed; color: #2a69ac; }
+
+    /* ── App Header ── */
     .card-header {
       background: #2c5282;
       padding: 22px 28px;
@@ -34,7 +139,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 12px;
     }
 
     .header-left {
@@ -57,32 +162,24 @@
 
     .company-logo.visible { display: block; }
 
-    .header-text h1 {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
+    .header-text h1 { font-size: 20px; font-weight: 700; line-height: 1.2; }
+    .header-text p  { font-size: 13px; opacity: .70; margin-top: 2px; }
 
-    .header-text p {
-      font-size: 13px;
-      opacity: .70;
-      margin-top: 2px;
-    }
+    .header-actions { display: flex; gap: 8px; flex-shrink: 0; }
 
-    .btn-settings {
+    .btn-icon {
       background: rgba(255,255,255,.15);
       border: 1px solid rgba(255,255,255,.25);
       border-radius: 8px;
       color: #fff;
       cursor: pointer;
       padding: 7px 10px;
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1;
-      flex-shrink: 0;
       transition: background .15s;
     }
 
-    .btn-settings:hover { background: rgba(255,255,255,.25); }
+    .btn-icon:hover { background: rgba(255,255,255,.28); }
 
     /* ── Settings Panel ── */
     .settings-panel {
@@ -95,7 +192,7 @@
     }
 
     .settings-panel.open {
-      max-height: 1100px;
+      max-height: 1200px;
       padding: 24px 28px;
     }
 
@@ -104,9 +201,6 @@
       font-weight: 700;
       color: #4a5568;
       margin-bottom: 18px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .settings-grid {
@@ -139,7 +233,6 @@
 
     .s-input:focus { border-color: #2c5282; }
 
-    /* Logo Upload */
     .logo-upload-area {
       display: flex;
       align-items: center;
@@ -162,11 +255,7 @@
       background: #fff;
     }
 
-    .logo-preview-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+    .logo-preview-box img { width: 100%; height: 100%; object-fit: contain; }
 
     .logo-upload-controls { flex: 1; }
 
@@ -184,12 +273,7 @@
     }
 
     .btn-upload:hover { background: #bee3f8; }
-
-    .logo-hint {
-      font-size: 11px;
-      color: #a0aec0;
-      margin-top: 5px;
-    }
+    .logo-hint { font-size: 11px; color: #a0aec0; margin-top: 5px; }
 
     .btn-remove-logo {
       background: none;
@@ -204,7 +288,6 @@
 
     .btn-remove-logo.visible { display: block; }
 
-    /* Save Button */
     .btn-save-settings {
       margin-top: 16px;
       width: 100%;
@@ -265,16 +348,9 @@
       background: #f8fafc;
     }
 
-    input:focus {
-      border-color: #2c5282;
-      background: #fff;
-    }
+    input:focus { border-color: #2c5282; background: #fff; }
 
-    .divider {
-      height: 1px;
-      background: #e2e8f0;
-      margin: 20px 0;
-    }
+    .divider { height: 1px; background: #e2e8f0; margin: 20px 0; }
 
     /* ── Recorder ── */
     .recorder-area {
@@ -288,16 +364,8 @@
       transition: border-color .2s, background .2s;
     }
 
-    .recorder-area.recording {
-      border-color: #e53e3e;
-      background: #fff5f5;
-    }
-
-    .recorder-area.has-audio {
-      border-color: #38a169;
-      background: #f0fff4;
-      border-style: solid;
-    }
+    .recorder-area.recording { border-color: #e53e3e; background: #fff5f5; }
+    .recorder-area.has-audio  { border-color: #38a169; background: #f0fff4; border-style: solid; }
 
     .record-btn {
       width: 76px;
@@ -381,29 +449,9 @@
       text-align: center;
     }
 
-    .toast.success {
-      display: block;
-      background: #f0fff4;
-      border: 1.5px solid #68d391;
-      color: #276749;
-    }
-
-    .toast.error {
-      display: block;
-      background: #fff5f5;
-      border: 1.5px solid #fc8181;
-      color: #9b2c2c;
-    }
-
-    .toast.loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #ebf8ff;
-      border: 1.5px solid #63b3ed;
-      color: #2a69ac;
-    }
+    .toast.success { display: block; background: #f0fff4; border: 1.5px solid #68d391; color: #276749; }
+    .toast.error   { display: block; background: #fff5f5; border: 1.5px solid #fc8181; color: #9b2c2c; }
+    .toast.loading { display: flex; align-items: center; justify-content: center; gap: 12px; background: #ebf8ff; border: 1.5px solid #63b3ed; color: #2a69ac; }
 
     .spinner {
       width: 17px;
@@ -417,15 +465,8 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .hint {
-      margin-top: 10px;
-      font-size: 12px;
-      color: #a0aec0;
-      text-align: center;
-      line-height: 1.5;
-    }
+    .hint { margin-top: 10px; font-size: 12px; color: #a0aec0; text-align: center; line-height: 1.5; }
 
-    /* ── Settings missing banner ── */
     .settings-hint-banner {
       margin-bottom: 18px;
       padding: 10px 14px;
@@ -439,9 +480,7 @@
       gap: 8px;
     }
 
-    .settings-hint-banner.visible {
-      display: flex;
-    }
+    .settings-hint-banner.visible { display: flex; }
 
     .settings-hint-banner button {
       background: none;
@@ -457,9 +496,63 @@
 </head>
 <body>
 
-<div class="card">
+<!-- ════════════════════════════════════════════════════════
+     AUTH SCREEN
+════════════════════════════════════════════════════════ -->
+<div class="card" id="auth-screen">
+  <div class="auth-header">
+    <h1>🏗️ Angebot-Generator</h1>
+    <p>Bitte einloggen oder Konto erstellen</p>
+  </div>
 
-  <!-- ── Header ── -->
+  <div class="auth-tabs">
+    <button class="auth-tab active" id="tab-login"   onclick="switchTab('login')">Einloggen</button>
+    <button class="auth-tab"        id="tab-register" onclick="switchTab('register')">Registrieren</button>
+  </div>
+
+  <div class="auth-body">
+
+    <!-- Login -->
+    <form class="auth-form active" id="form-login" onsubmit="handleLogin(event)">
+      <div class="auth-group">
+        <label class="auth-label" for="login-email">E-Mail</label>
+        <input class="auth-input" type="email" id="login-email" placeholder="deine@email.at" required autocomplete="email">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label" for="login-password">Passwort</label>
+        <input class="auth-input" type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+      <button class="btn-auth" type="submit" id="btn-login">Einloggen</button>
+      <div class="auth-toast" id="toast-login"></div>
+    </form>
+
+    <!-- Register -->
+    <form class="auth-form" id="form-register" onsubmit="handleRegister(event)">
+      <div class="auth-group">
+        <label class="auth-label" for="reg-email">E-Mail</label>
+        <input class="auth-input" type="email" id="reg-email" placeholder="deine@email.at" required autocomplete="email">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label" for="reg-password">Passwort</label>
+        <input class="auth-input" type="password" id="reg-password" placeholder="Min. 6 Zeichen" required autocomplete="new-password" minlength="6">
+      </div>
+      <div class="auth-group">
+        <label class="auth-label" for="reg-password2">Passwort wiederholen</label>
+        <input class="auth-input" type="password" id="reg-password2" placeholder="••••••••" required autocomplete="new-password">
+      </div>
+      <button class="btn-auth" type="submit" id="btn-register">Konto erstellen</button>
+      <div class="auth-toast" id="toast-register"></div>
+    </form>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     APP SCREEN
+════════════════════════════════════════════════════════ -->
+<div class="card" id="app-screen">
+
+  <!-- Header -->
   <div class="card-header">
     <div class="header-left">
       <img class="company-logo" id="headerLogo" src="" alt="Logo">
@@ -468,10 +561,13 @@
         <p>Kundendaten eingeben, Positionen einsprechen – fertig.</p>
       </div>
     </div>
-    <button class="btn-settings" id="btnSettings" title="Einstellungen">⚙️</button>
+    <div class="header-actions">
+      <button class="btn-icon" id="btnSettings" title="Einstellungen" onclick="toggleSettings()">⚙️</button>
+      <button class="btn-icon" title="Ausloggen" onclick="handleLogout()">↪</button>
+    </div>
   </div>
 
-  <!-- ── Settings Panel ── -->
+  <!-- Settings Panel -->
   <div class="settings-panel" id="settingsPanel">
     <p class="settings-title">⚙️ Mein Unternehmen</p>
 
@@ -484,7 +580,7 @@
         <label class="btn-upload" for="logoFileInput">📁 Logo hochladen</label>
         <input type="file" id="logoFileInput" accept="image/*" style="display:none">
         <p class="logo-hint">PNG, JPG oder SVG · wird auf dem Angebot angezeigt</p>
-        <button class="btn-remove-logo" id="btnRemoveLogo">✕ Logo entfernen</button>
+        <button class="btn-remove-logo" id="btnRemoveLogo" type="button">✕ Logo entfernen</button>
       </div>
     </div>
 
@@ -545,20 +641,18 @@
       </div>
     </div>
 
-    <button class="btn-save-settings" id="btnSaveSettings">Einstellungen speichern</button>
+    <button class="btn-save-settings" id="btnSaveSettings" type="button">Einstellungen speichern</button>
     <p class="save-feedback" id="saveFeedback"></p>
   </div>
 
-  <!-- ── Card Body ── -->
+  <!-- Card Body -->
   <div class="card-body">
 
-    <!-- Settings reminder -->
     <div class="settings-hint-banner" id="settingsBanner">
       ⚠️ Firmenname noch nicht eingestellt.
       <button onclick="openSettings()">Jetzt einrichten →</button>
     </div>
 
-    <!-- Kundendaten -->
     <p class="section-label">1. Kundendaten</p>
 
     <div class="form-group">
@@ -578,74 +672,140 @@
 
     <div class="divider"></div>
 
-    <!-- Aufnahme -->
     <p class="section-label">2. Positionen einsprechen</p>
 
     <div class="recorder-area" id="recorderArea">
-      <button class="record-btn idle" id="recordBtn" title="Aufnahme starten">🎤</button>
+      <button class="record-btn idle" id="recordBtn" type="button" title="Aufnahme starten">🎤</button>
       <p class="record-status" id="recordStatus">Tippe zum Starten der Aufnahme</p>
       <p class="timer" id="timer"></p>
       <audio class="audio-preview" id="audioPreview" controls></audio>
-      <button class="btn-reset" id="btnReset">↺ Neu aufnehmen</button>
+      <button class="btn-reset" id="btnReset" type="button">↺ Neu aufnehmen</button>
     </div>
 
     <p class="hint">
-      Beispiel: <em>„Wohnzimmer streichen, 6 Stunden, 35 Euro pro Stunde, Material 80 Euro.
-      Badezimmer fliesen, 10 Stunden, 40 Euro, Material 320 Euro."</em>
+      Beispiel: <em>„Wohnzimmer streichen, 6 Stunden, 35 Euro pro Stunde, Material 80 Euro."</em>
     </p>
 
-    <button class="btn-submit" id="submitBtn" disabled>
+    <button class="btn-submit" id="submitBtn" type="button" disabled>
       <span id="submitIcon">📤</span>
       <span id="submitText">Angebot erstellen &amp; senden</span>
     </button>
 
     <div class="toast" id="toast"></div>
-
   </div>
 </div>
 
 <script>
-  // ── Konfiguration ────────────────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════════
+  // SUPABASE KONFIGURATION
+  // → Erstelle ein kostenloses Projekt auf https://supabase.com
+  // → Kopiere URL und anon key aus: Project Settings → API
+  // ══════════════════════════════════════════════════════════════════════
+  const SUPABASE_URL      = 'DEINE_SUPABASE_URL';      // z. B. https://xyz.supabase.co
+  const SUPABASE_ANON_KEY = 'DEIN_SUPABASE_ANON_KEY';  // beginnt mit eyJ...
+
   const WEBHOOK_URL = 'https://n8n.srv1489105.hstgr.cloud/webhook/angebot-erstellen';
   const STORAGE_KEY = 'angebot_settings';
 
-  // ── DOM ──────────────────────────────────────────────────────────────────────
-  const recordBtn       = document.getElementById('recordBtn');
-  const recordStatus    = document.getElementById('recordStatus');
-  const timerEl         = document.getElementById('timer');
-  const audioPreview    = document.getElementById('audioPreview');
-  const btnReset        = document.getElementById('btnReset');
-  const recorderArea    = document.getElementById('recorderArea');
-  const submitBtn       = document.getElementById('submitBtn');
-  const submitText      = document.getElementById('submitText');
-  const submitIcon      = document.getElementById('submitIcon');
-  const toast           = document.getElementById('toast');
-  const btnSettings     = document.getElementById('btnSettings');
-  const settingsPanel   = document.getElementById('settingsPanel');
-  const btnSaveSettings = document.getElementById('btnSaveSettings');
-  const saveFeedback    = document.getElementById('saveFeedback');
-  const logoFileInput   = document.getElementById('logoFileInput');
-  const logoPreviewImg  = document.getElementById('logoPreviewImg');
-  const logoPlaceholder = document.getElementById('logoPlaceholder');
-  const btnRemoveLogo   = document.getElementById('btnRemoveLogo');
-  const headerLogo      = document.getElementById('headerLogo');
-  const headerTitle     = document.getElementById('headerTitle');
-  const settingsBanner  = document.getElementById('settingsBanner');
+  // ── Supabase Init ────────────────────────────────────────────────────
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // ── Settings ─────────────────────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════════
+  // AUTH
+  // ══════════════════════════════════════════════════════════════════════
+
+  function switchTab(tab) {
+    document.getElementById('tab-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+    document.getElementById('form-login').classList.toggle('active',    tab === 'login');
+    document.getElementById('form-register').classList.toggle('active', tab === 'register');
+  }
+
+  function showAuthToast(formId, type, msg) {
+    const el = document.getElementById('toast-' + formId);
+    el.className = 'auth-toast ' + type;
+    el.textContent = msg;
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const btn      = document.getElementById('btn-login');
+
+    btn.disabled = true;
+    showAuthToast('login', 'loading', 'Wird eingeloggt …');
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    btn.disabled = false;
+    if (error) {
+      showAuthToast('login', 'error', 'Fehler: ' + (error.message === 'Invalid login credentials'
+        ? 'E-Mail oder Passwort falsch.'
+        : error.message));
+    }
+    // onAuthStateChange handled below
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    const email  = document.getElementById('reg-email').value.trim();
+    const pw1    = document.getElementById('reg-password').value;
+    const pw2    = document.getElementById('reg-password2').value;
+    const btn    = document.getElementById('btn-register');
+
+    if (pw1 !== pw2) {
+      showAuthToast('register', 'error', 'Passwörter stimmen nicht überein.'); return;
+    }
+
+    btn.disabled = true;
+    showAuthToast('register', 'loading', 'Konto wird erstellt …');
+
+    const { error } = await supabase.auth.signUp({ email, password: pw1 });
+
+    btn.disabled = false;
+    if (error) {
+      showAuthToast('register', 'error', 'Fehler: ' + error.message);
+    } else {
+      showAuthToast('register', 'success', '✅ Konto erstellt! Bitte E-Mail bestätigen, dann einloggen.');
+      switchTab('login');
+    }
+  }
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+  }
+
+  // Auth State Listener — zeigt entweder Auth- oder App-Screen
+  supabase.auth.onAuthStateChange((_event, session) => {
+    const authEl = document.getElementById('auth-screen');
+    const appEl  = document.getElementById('app-screen');
+    if (session) {
+      authEl.classList.remove('active');
+      appEl.classList.add('active');
+    } else {
+      appEl.classList.remove('active');
+      authEl.classList.add('active');
+    }
+  });
+
+  // ══════════════════════════════════════════════════════════════════════
+  // SETTINGS
+  // ══════════════════════════════════════════════════════════════════════
+
+  const headerLogo     = document.getElementById('headerLogo');
+  const headerTitle    = document.getElementById('headerTitle');
+  const settingsBanner = document.getElementById('settingsBanner');
+  const logoPreviewImg = document.getElementById('logoPreviewImg');
+  const logoPlaceholder= document.getElementById('logoPlaceholder');
+  const btnRemoveLogo  = document.getElementById('btnRemoveLogo');
+  const logoFileInput  = document.getElementById('logoFileInput');
+  const saveFeedback   = document.getElementById('saveFeedback');
+
   let settings = {
-    firmenname: '',
-    strasse:    '',
-    plz:        '',
-    ort:        '',
-    telefon:    '',
-    email:      '',
-    website:    '',
-    uid:        '',
-    iban:       '',
-    bic:        '',
-    bankname:   '',
-    logo:       ''
+    firmenname: '', strasse: '', plz: '', ort: '',
+    telefon: '', email: '', website: '', uid: '',
+    iban: '', bic: '', bankname: '', logo: ''
   };
 
   function loadSettings() {
@@ -654,17 +814,11 @@
       if (stored) settings = { ...settings, ...JSON.parse(stored) };
     } catch(e) {}
 
-    document.getElementById('s_firmenname').value = settings.firmenname;
-    document.getElementById('s_strasse').value    = settings.strasse;
-    document.getElementById('s_plz').value        = settings.plz;
-    document.getElementById('s_ort').value        = settings.ort;
-    document.getElementById('s_telefon').value    = settings.telefon;
-    document.getElementById('s_email').value      = settings.email;
-    document.getElementById('s_website').value    = settings.website;
-    document.getElementById('s_uid').value        = settings.uid;
-    document.getElementById('s_iban').value       = settings.iban;
-    document.getElementById('s_bic').value        = settings.bic;
-    document.getElementById('s_bankname').value   = settings.bankname;
+    const fields = ['firmenname','strasse','plz','ort','telefon','email','website','uid','iban','bic','bankname'];
+    fields.forEach(f => {
+      const el = document.getElementById('s_' + f);
+      if (el) el.value = settings[f] || '';
+    });
 
     if (settings.logo) {
       showLogoPreview(settings.logo);
@@ -672,66 +826,47 @@
       headerLogo.classList.add('visible');
     }
 
-    if (settings.firmenname) {
-      headerTitle.textContent = settings.firmenname;
-      settingsBanner.classList.remove('visible');
-    } else {
-      settingsBanner.classList.add('visible');
-    }
+    headerTitle.textContent = settings.firmenname || 'Angebot-Generator';
+    settingsBanner.classList.toggle('visible', !settings.firmenname);
   }
 
   function saveSettings() {
-    settings.firmenname = document.getElementById('s_firmenname').value.trim();
-    settings.strasse    = document.getElementById('s_strasse').value.trim();
-    settings.plz        = document.getElementById('s_plz').value.trim();
-    settings.ort        = document.getElementById('s_ort').value.trim();
-    settings.telefon    = document.getElementById('s_telefon').value.trim();
-    settings.email      = document.getElementById('s_email').value.trim();
-    settings.website    = document.getElementById('s_website').value.trim();
-    settings.uid        = document.getElementById('s_uid').value.trim();
-    settings.iban       = document.getElementById('s_iban').value.trim();
-    settings.bic        = document.getElementById('s_bic').value.trim();
-    settings.bankname   = document.getElementById('s_bankname').value.trim();
+    const fields = ['firmenname','strasse','plz','ort','telefon','email','website','uid','iban','bic','bankname'];
+    fields.forEach(f => {
+      const el = document.getElementById('s_' + f);
+      if (el) settings[f] = el.value.trim();
+    });
 
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
-    } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(settings)); } catch(e) {}
 
-    // Update header
     headerTitle.textContent = settings.firmenname || 'Angebot-Generator';
+    settingsBanner.classList.toggle('visible', !settings.firmenname);
 
-    if (settings.firmenname) {
-      settingsBanner.classList.remove('visible');
-    } else {
-      settingsBanner.classList.add('visible');
-    }
-
-    saveFeedback.textContent = '✅ Gespeichert!';
+    saveFeedback.textContent = 'Gespeichert!';
     setTimeout(() => { saveFeedback.textContent = ''; }, 2500);
   }
 
-  btnSaveSettings.addEventListener('click', saveSettings);
+  document.getElementById('btnSaveSettings').addEventListener('click', saveSettings);
 
-  function openSettings() {
-    settingsPanel.classList.add('open');
-    btnSettings.textContent = '✕';
+  function toggleSettings() {
+    const panel  = document.getElementById('settingsPanel');
+    const btn    = document.getElementById('btnSettings');
+    const isOpen = panel.classList.toggle('open');
+    btn.textContent = isOpen ? '✕' : '⚙️';
   }
 
-  btnSettings.addEventListener('click', () => {
-    const isOpen = settingsPanel.classList.toggle('open');
-    btnSettings.textContent = isOpen ? '✕' : '⚙️';
-  });
+  function openSettings() {
+    document.getElementById('settingsPanel').classList.add('open');
+    document.getElementById('btnSettings').textContent = '✕';
+  }
 
-  // ── Logo Upload ───────────────────────────────────────────────────────────────
+  // Logo Upload
   logoFileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const dataUrl = ev.target.result;
-      // Resize to max 200px to keep localStorage usage small
-      resizeLogo(dataUrl, 200, (resized) => {
+      resizeLogo(ev.target.result, 200, (resized) => {
         settings.logo = resized;
         showLogoPreview(resized);
         headerLogo.src = resized;
@@ -759,28 +894,48 @@
     headerLogo.classList.remove('visible');
   });
 
-  // ── Timer ─────────────────────────────────────────────────────────────────────
-  let mediaRecorder = null;
-  let audioChunks   = [];
-  let audioBlob     = null;
-  let timerInterval = null;
-  let seconds       = 0;
-  let state         = 'idle';
+  function resizeLogo(dataUrl, maxPx, callback) {
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      callback(canvas.toDataURL('image/png'));
+    };
+    img.src = dataUrl;
+  }
+
+  // ══════════════════════════════════════════════════════════════════════
+  // RECORDER
+  // ══════════════════════════════════════════════════════════════════════
+
+  const recordBtn    = document.getElementById('recordBtn');
+  const recordStatus = document.getElementById('recordStatus');
+  const timerEl      = document.getElementById('timer');
+  const audioPreview = document.getElementById('audioPreview');
+  const btnReset     = document.getElementById('btnReset');
+  const recorderArea = document.getElementById('recorderArea');
+  const submitBtn    = document.getElementById('submitBtn');
+  const submitText   = document.getElementById('submitText');
+  const submitIcon   = document.getElementById('submitIcon');
+  const toast        = document.getElementById('toast');
+
+  let mediaRecorder = null, audioChunks = [], audioBlob = null;
+  let timerInterval = null, seconds = 0, state = 'idle';
 
   function startTimer() {
     seconds = 0;
     timerEl.textContent = '0:00';
     timerInterval = setInterval(() => {
       seconds++;
-      const m = Math.floor(seconds / 60);
-      const s = String(seconds % 60).padStart(2, '0');
-      timerEl.textContent = `${m}:${s}`;
+      timerEl.textContent = Math.floor(seconds/60) + ':' + String(seconds%60).padStart(2,'0');
     }, 1000);
   }
 
   function stopTimer() { clearInterval(timerInterval); }
 
-  // ── Aufnahme ──────────────────────────────────────────────────────────────────
   recordBtn.addEventListener('click', async () => {
     if (state === 'idle') await startRecording();
     else if (state === 'recording') stopRecording();
@@ -790,7 +945,6 @@
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunks = [];
-
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
         ? 'audio/webm;codecs=opus'
         : MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : 'audio/ogg';
@@ -808,7 +962,7 @@
       recorderArea.className = 'recorder-area recording';
       startTimer();
     } catch (err) {
-      showToast('error', 'Mikrofon-Zugriff verweigert. Bitte Erlaubnis in den Browser-Einstellungen geben.');
+      showToast('error', 'Mikrofon-Zugriff verweigert.');
     }
   }
 
@@ -822,9 +976,7 @@
 
   function onRecordingStop() {
     audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
-    const url = URL.createObjectURL(audioBlob);
-
-    audioPreview.src = url;
+    audioPreview.src = URL.createObjectURL(audioBlob);
     audioPreview.classList.add('visible');
     btnReset.classList.add('visible');
 
@@ -836,7 +988,6 @@
     recordStatus.className = 'record-status done';
     recorderArea.className = 'recorder-area has-audio';
     timerEl.textContent = '';
-
     checkSubmitReady();
   }
 
@@ -845,7 +996,6 @@
     audioPreview.src = '';
     audioPreview.classList.remove('visible');
     btnReset.classList.remove('visible');
-
     state = 'idle';
     recordBtn.className = 'record-btn idle';
     recordBtn.textContent = '🎤';
@@ -854,12 +1004,14 @@
     recordStatus.className = 'record-status';
     recorderArea.className = 'recorder-area';
     timerEl.textContent = '';
-
     toast.className = 'toast';
     submitBtn.disabled = true;
   });
 
-  // ── Formular-Validierung ──────────────────────────────────────────────────────
+  // ══════════════════════════════════════════════════════════════════════
+  // SUBMIT
+  // ══════════════════════════════════════════════════════════════════════
+
   ['kundenname', 'adresse', 'empfaenger_email'].forEach(id => {
     document.getElementById(id).addEventListener('input', checkSubmitReady);
   });
@@ -871,22 +1023,17 @@
     submitBtn.disabled = !(name && adr && email && audioBlob);
   }
 
-  // ── Submit ────────────────────────────────────────────────────────────────────
   submitBtn.addEventListener('click', async () => {
     const kundenname       = document.getElementById('kundenname').value.trim();
     const adresse          = document.getElementById('adresse').value.trim();
     const empfaenger_email = document.getElementById('empfaenger_email').value.trim();
 
     const ext = audioBlob.type.includes('ogg') ? 'ogg' : 'webm';
-    const audioFile = new File([audioBlob], `aufnahme.${ext}`, { type: audioBlob.type });
-
     const formData = new FormData();
+    formData.append('audio', new File([audioBlob], `aufnahme.${ext}`, { type: audioBlob.type }));
     formData.append('kundenname',       kundenname);
     formData.append('adresse',          adresse);
     formData.append('empfaenger_email', empfaenger_email);
-    formData.append('audio',            audioFile);
-
-    // Unternehmens-Einstellungen mitsenden
     formData.append('firmenname', settings.firmenname);
     formData.append('strasse',    settings.strasse);
     formData.append('plz',        settings.plz);
@@ -898,24 +1045,20 @@
     formData.append('iban',       settings.iban);
     formData.append('bic',        settings.bic);
     formData.append('bankname',   settings.bankname);
-    if (settings.logo) {
-      formData.append('logo', settings.logo);
-    }
+    if (settings.logo) formData.append('logo', settings.logo);
 
     setLoadingState(true);
-
     try {
       const res = await fetch(WEBHOOK_URL, { method: 'POST', body: formData });
-
       if (res.ok) {
-        showToast('success', `✅ Angebot wurde erfolgreich erstellt und an ${empfaenger_email} gesendet!`);
+        showToast('success', `Angebot wurde erstellt und an ${empfaenger_email} gesendet!`);
         resetForm();
       } else {
         const text = await res.text();
         showToast('error', `Fehler (${res.status}): ${text || 'Unbekannter Fehler'}`);
       }
     } catch (err) {
-      showToast('error', 'Verbindungsfehler. Bitte Internetverbindung prüfen und nochmals versuchen.');
+      showToast('error', 'Verbindungsfehler. Bitte Internetverbindung prüfen.');
     } finally {
       setLoadingState(false);
     }
@@ -923,23 +1066,16 @@
 
   function setLoadingState(loading) {
     submitBtn.disabled = loading;
-    if (loading) {
-      submitIcon.textContent = '';
-      submitText.textContent = 'Wird verarbeitet …';
-      showToast('loading', 'Audio wird transkribiert und Angebot erstellt …');
-    } else {
-      submitIcon.textContent = '📤';
-      submitText.textContent = 'Angebot erstellen & senden';
-    }
+    submitIcon.textContent = loading ? '' : '📤';
+    submitText.textContent = loading ? 'Wird verarbeitet …' : 'Angebot erstellen & senden';
+    if (loading) showToast('loading', 'Audio wird transkribiert und Angebot erstellt …');
   }
 
   function showToast(type, msg) {
     toast.className = `toast ${type}`;
-    if (type === 'loading') {
-      toast.innerHTML = `<div class="spinner"></div><span>${msg}</span>`;
-    } else {
-      toast.textContent = msg;
-    }
+    toast.innerHTML = type === 'loading'
+      ? `<div class="spinner"></div><span>${msg}</span>`
+      : msg;
   }
 
   function resetForm() {
@@ -949,21 +1085,7 @@
     btnReset.click();
   }
 
-  // ── Logo Resize (keeps localStorage lean) ────────────────────────────────────
-  function resizeLogo(dataUrl, maxPx, callback) {
-    const img = new Image();
-    img.onload = () => {
-      const scale = Math.min(1, maxPx / Math.max(img.width, img.height));
-      const canvas = document.createElement('canvas');
-      canvas.width  = Math.round(img.width  * scale);
-      canvas.height = Math.round(img.height * scale);
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      callback(canvas.toDataURL('image/png'));
-    };
-    img.src = dataUrl;
-  }
-
-  // ── Init ──────────────────────────────────────────────────────────────────────
+  // ── Init ─────────────────────────────────────────────────────────────
   loadSettings();
 </script>
 
