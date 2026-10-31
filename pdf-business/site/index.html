@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Protein Prep Blueprint | Prepwell</title>
+<meta name="description" content="A 4-week high-protein meal prep system: 13 recipes, weekly grocery lists and a 60-minute Sunday prep plan. About 140 g of protein a day, no macro math.">
+<meta property="og:title" content="The Protein Prep Blueprint">
+<meta property="og:description" content="Hit your protein goal with two short prep sessions a week. 13 recipes, 4 weekly plans, grocery lists.">
+<meta property="og:type" content="product">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='46' fill='%231f6f5c'/><text x='50' y='66' font-size='50' text-anchor='middle' fill='white' font-family='Arial' font-weight='700'>P</text></svg>">
+<style>
+  /* ====== EDIT THESE TWO LINKS AFTER YOU CREATE YOUR PRODUCTS (see LAUNCH.md) ====== */
+  /* Checkout link and free cheat sheet link are set in the <script> at the bottom.   */
+  :root {
+    --g: #1f6f5c; --g-dark: #164f42; --g2: #e7f2ee; --c: #ff7a59; --c-dark: #e8603f; --c2: #fff1ec;
+    --ink: #1d2b27; --mute: #5d6e69; --line: #d7e3df; --bg: #fbfaf7; --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; font-size: 17px; }
+  a { color: var(--g); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+  .narrow { max-width: 720px; }
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; }
+  .logo { font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--g); text-decoration: none; font-size: 15px; }
+  .btn { display: inline-block; background: var(--c); color: #fff; text-decoration: none; font-weight: 700; padding: 15px 28px; border-radius: 999px; font-size: 17px; box-shadow: 0 6px 18px rgba(255,122,89,.35); transition: transform .15s, background .15s; border: 0; cursor: pointer; }
+  .btn:hover { background: var(--c-dark); transform: translateY(-1px); }
+  .btn.ghost { background: transparent; color: var(--g); box-shadow: none; border: 2px solid var(--g); }
+  .btn.small { padding: 10px 18px; font-size: 15px; }
+  header.hero { padding: 40px 0 70px; }
+  .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 50px; align-items: center; }
+  .kicker { text-transform: uppercase; letter-spacing: 2px; font-weight: 800; font-size: 13px; color: var(--c-dark); }
+  h1 { font-size: clamp(36px, 5.5vw, 58px); line-height: 1.05; margin: 10px 0 18px; letter-spacing: -1px; }
+  h1 em { font-style: normal; color: var(--g); }
+  h2 { font-size: clamp(28px, 4vw, 38px); line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.5px; }
+  .lead { font-size: 20px; color: var(--mute); margin: 0 0 26px; }
+  .price-line { margin-top: 14px; color: var(--mute); font-size: 15px; }
+  .mock { position: relative; height: 420px; }
+  .book { position: absolute; width: 270px; height: 350px; border-radius: 10px 16px 16px 10px; background: linear-gradient(160deg, var(--g) 0%, var(--g-dark) 100%); color: #fff; padding: 30px 26px; box-shadow: 0 30px 60px rgba(22,79,66,.35), inset 6px 0 0 rgba(0,0,0,.15); }
+  .book.back { transform: rotate(8deg) translate(70px, 30px); background: #fff; color: var(--ink); box-shadow: 0 20px 40px rgba(0,0,0,.12); }
+  .book .pill { display: inline-block; background: var(--c); color: #fff; font-size: 10px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; padding: 4px 10px; border-radius: 99px; }
+  .book h3 { font-size: 30px; line-height: 1.05; margin: 70px 0 10px; }
+  .book p { font-size: 13px; color: #cfe7df; margin: 0; }
+  .book .brand { position: absolute; bottom: 24px; font-size: 10px; letter-spacing: 3px; font-weight: 800; color: #cfe7df; }
+  .back .mini { font-size: 11px; }
+  .back .row { display: flex; gap: 6px; margin: 8px 0; }
+  .back .row div { flex: 1; background: var(--g2); border-radius: 6px; padding: 6px; text-align: center; font-weight: 800; color: var(--g); font-size: 13px; }
+  .back .row div:first-child { background: var(--g); color: #fff; }
+  .back .line { height: 7px; background: #eef2f0; border-radius: 4px; margin: 7px 0; }
+  section { padding: 70px 0; }
+  .alt { background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .pain { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 26px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; }
+  .alt .card { background: var(--bg); }
+  .card h3 { margin: 0 0 8px; font-size: 19px; }
+  .card p { margin: 0; color: var(--mute); }
+  .steps { counter-reset: s; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 26px; }
+  .steps .card::before { counter-increment: s; content: counter(s); display: inline-flex; width: 34px; height: 34px; border-radius: 50%; background: var(--g); color: #fff; font-weight: 800; align-items: center; justify-content: center; margin-bottom: 10px; }
+  .inside { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 30px; margin-top: 24px; padding: 0; list-style: none; }
+  .inside li { padding-left: 34px; position: relative; }
+  .inside li::before { content: "✓"; position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%; background: var(--g2); color: var(--g); font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+  .recipes { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin-top: 26px; }
+  .recipe { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+  .recipe b { color: var(--g); white-space: nowrap; }
+  .fit { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .fit ul { margin: 0; padding-left: 20px; }
+  .fit .no { background: var(--c2); border-color: #ffd8cb; }
+  .offer { background: linear-gradient(160deg, var(--g) 0%, var(--g-dark) 100%); color: #fff; border-radius: 24px; padding: 44px; text-align: center; }
+  .offer h2 { color: #fff; }
+  .offer .price { font-size: 64px; font-weight: 800; line-height: 1; margin: 10px 0; }
+  .offer .muted { color: #cfe7df; }
+  .offer ul { list-style: none; padding: 0; margin: 22px auto; max-width: 440px; text-align: left; }
+  .offer li { padding: 6px 0 6px 30px; position: relative; }
+  .offer li::before { content: "✓"; position: absolute; left: 0; color: #ffd2c4; font-weight: 800; }
+  .guarantee { margin-top: 20px; font-size: 15px; color: #cfe7df; }
+  .free { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: center; background: var(--c2); border: 1px solid #ffd8cb; border-radius: 20px; padding: 32px; }
+  details { border-bottom: 1px solid var(--line); padding: 16px 0; }
+  summary { font-weight: 700; cursor: pointer; font-size: 18px; }
+  details p { color: var(--mute); margin: 10px 0 0; }
+  footer { padding: 40px 0 60px; font-size: 14px; color: var(--mute); }
+  footer .links a { margin-right: 16px; }
+  .sticky { position: fixed; left: 0; right: 0; bottom: 0; background: #fff; border-top: 1px solid var(--line); padding: 10px 16px; display: none; justify-content: space-between; align-items: center; gap: 10px; z-index: 10; }
+  @media (max-width: 860px) {
+    .hero-grid, .fit, .free { grid-template-columns: 1fr; }
+    .mock { height: 380px; max-width: 360px; margin: 0 auto; width: 100%; }
+    .pain { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .inside { grid-template-columns: 1fr; }
+    .offer { padding: 32px 20px; }
+    .sticky { display: flex; }
+    body { padding-bottom: 70px; }
+  }
+  @media (max-width: 420px) {
+    .steps { grid-template-columns: 1fr; }
+    .book { width: 230px; height: 310px; }
+    .book.back { transform: rotate(8deg) translate(50px, 26px); }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <a class="logo" href="#">Prepwell</a>
+    <a class="btn small js-buy" href="#buy">Get the Blueprint</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">4-week high-protein meal prep system</div>
+      <h1>Hit your protein goal <em>without thinking about food all day.</em></h1>
+      <p class="lead">13 high-protein recipes, a day-by-day plan and a 60-minute Sunday prep routine. Around 140 g of protein a day. No macro math, no bland chicken and rice for 28 days.</p>
+      <a class="btn js-buy" href="#buy">Get the Blueprint for $19</a>
+      <div class="price-line">Instant PDF download &middot; Works on phone, tablet and print</div>
+    </div>
+    <div class="mock" aria-hidden="true">
+      <div class="book back">
+        <div class="mini" style="color:var(--c-dark);font-weight:800;letter-spacing:1px">M1 · MAIN</div>
+        <div style="font-weight:800;font-size:18px;color:var(--g);margin:4px 0 6px">Sheet-Pan Lemon Herb Chicken &amp; Veg</div>
+        <div class="row"><div>52 g</div><div>460</div><div>38 g</div></div>
+        <div class="line"></div><div class="line" style="width:80%"></div><div class="line" style="width:90%"></div><div class="line" style="width:70%"></div><div class="line"></div><div class="line" style="width:60%"></div>
+      </div>
+      <div class="book">
+        <span class="pill">4-Week System</span>
+        <h3>The Protein Prep Blueprint</h3>
+        <p>~140 g protein a day with two short prep sessions a week.</p>
+        <div class="brand">PREPWELL</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker">Sound familiar?</div>
+    <h2>You know protein matters. Eating enough of it every day is the hard part.</h2>
+    <div class="pain">
+      <div class="card"><h3>7 pm, nothing ready</h3><p>You planned to eat well, then the fridge is empty and you order something that has 20 g of protein in total.</p></div>
+      <div class="card"><h3>Tracking burnout</h3><p>Logging every gram in an app works for a week. Then life happens and you stop completely.</p></div>
+      <div class="card"><h3>Chicken fatigue</h3><p>Same plain chicken and rice every day. By day 10 you never want to see a meal prep box again.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The system</div>
+    <h2>Two short prep sessions. Every meal decided.</h2>
+    <div class="steps">
+      <div class="card"><h3>Shop once</h3><p>Use the ready-made grocery list for the week. Organised by aisle.</p></div>
+      <div class="card"><h3>Sunday: 60 minutes</h3><p>Follow the minute-by-minute timeline. Two mains, breakfasts and snacks done.</p></div>
+      <div class="card"><h3>Wednesday: 25 minutes</h3><p>One more main, so nothing in your fridge is older than 4 days.</p></div>
+      <div class="card"><h3>Just eat</h3><p>Breakfast, lunch, dinner and a snack already planned for every day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker">What's inside</div>
+    <h2>A 31-page PDF you will actually use</h2>
+    <ul class="inside">
+      <li><b>13 high-protein recipes</b> with ingredients in metric and US units, method and macros per serving</li>
+      <li><b>4 weekly meal plans</b> covering breakfast, lunch, dinner and snack every day</li>
+      <li><b>4 grocery lists</b> sorted into protein, produce and pantry</li>
+      <li><b>Minute-by-minute Sunday prep timelines</b> so two recipes cook at once</li>
+      <li><b>Protein target calculator</b>: find your number in 30 seconds and scale the plan to it</li>
+      <li><b>Swaps for vegetarian, dairy-free and budget</b> eating</li>
+      <li><b>The 30 g protein cheat sheet</b>: what 30 g looks like for 16 foods</li>
+      <li><b>Printable weekly tracker</b> and prep checklist for your fridge</li>
+    </ul>
+    <h3 style="margin-top:46px">The recipes</h3>
+    <div class="recipes">
+      <div class="recipe">Sheet-Pan Lemon Herb Chicken <b>52 g</b></div>
+      <div class="recipe">Chicken Burrito Bowls <b>49 g</b></div>
+      <div class="recipe">Salmon, Quinoa &amp; Lemon Yogurt <b>44 g</b></div>
+      <div class="recipe">Creamy Tuna Pasta Salad <b>42 g</b></div>
+      <div class="recipe">Overnight Protein Oats <b>37 g</b></div>
+      <div class="recipe">Crispy Tofu Peanut Stir-Fry <b>37 g</b></div>
+      <div class="recipe">Turkey &amp; Bean Chili <b>36 g</b></div>
+      <div class="recipe">Beef &amp; Broccoli Rice Bowls <b>36 g</b></div>
+      <div class="recipe">Classic Protein Shake <b>33 g</b></div>
+      <div class="recipe">Greek Yogurt Power Bowl <b>30 g</b></div>
+      <div class="recipe">Make-Ahead Egg Muffins <b>25 g</b></div>
+      <div class="recipe">Cottage Cheese &amp; Pineapple <b>24 g</b></div>
+      <div class="recipe">Protein Snack Box <b>24 g</b></div>
+    </div>
+    <p style="color:var(--mute);font-size:14px;margin-top:10px">Protein per serving, approximate.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Is this for you?</div>
+    <h2>Built for busy people, not bodybuilders</h2>
+    <div class="fit">
+      <div class="card"><h3>Perfect if you</h3><ul>
+        <li>Lift, run or train and want to support muscle</li>
+        <li>Are losing weight and want to stay full</li>
+        <li>Work full time and hate deciding what to eat</li>
+        <li>Want real food, not shakes for every meal</li>
+      </ul></div>
+      <div class="card no"><h3>Not for you if you</h3><ul>
+        <li>Need a medical or clinical diet (talk to your doctor or a dietitian)</li>
+        <li>Want a strict calorie-counted meal plan</li>
+        <li>Are fully vegan (about half the recipes adapt easily, not all)</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="buy" class="alt">
+  <div class="wrap narrow">
+    <div class="offer">
+      <div class="kicker" style="color:#ffd2c4">Instant download</div>
+      <h2>The Protein Prep Blueprint</h2>
+      <div class="price">$19</div>
+      <div class="muted">One-time payment. Yours to keep.</div>
+      <ul>
+        <li>31-page PDF, phone and print friendly</li>
+        <li>13 recipes with macros</li>
+        <li>4 weekly plans + 4 grocery lists</li>
+        <li>Prep timelines, swaps, cheat sheet, tracker</li>
+      </ul>
+      <a class="btn js-buy" href="#buy" style="font-size:19px;padding:17px 36px">Get instant access</a>
+      <div class="guarantee">30-day money-back guarantee. If it does not help, email us and you get a full refund. No questions asked.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="free">
+      <div>
+        <div class="kicker">Not ready yet?</div>
+        <h2 style="margin-bottom:8px">Grab the free 30 g Protein Cheat Sheet</h2>
+        <p style="margin:0;color:var(--mute)">What 30 g of protein looks like for 16 everyday foods, plus 3 quick wins to eat more protein without trying harder.</p>
+      </div>
+      <a class="btn ghost js-free" href="protein-cheat-sheet-free.pdf">Get it free</a>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap narrow">
+    <div class="kicker">Questions</div>
+    <h2>FAQ</h2>
+    <details><summary>How do I get the PDF?</summary><p>Right after checkout you get a download link on screen and by email. Open it on your phone or print it.</p></details>
+    <details><summary>How much protein is it per day?</summary><p>Around 140 to 150 g per day following the plan as written. The PDF shows you how to scale it up or down to your own target in 30 seconds.</p></details>
+    <details><summary>Is this a weight loss diet?</summary><p>No. It is a protein-first meal prep system. The plan gives you a base of about 1,350 to 1,900 kcal per day, and you add sides to match your own goal, whether that is losing fat or building muscle.</p></details>
+    <details><summary>I'm vegetarian. Will it work?</summary><p>Week 3 is plant-forward and the swap guide shows how to replace meat in the other recipes. Dairy and eggs are used, so it is not fully vegan.</p></details>
+    <details><summary>Do I need special equipment?</summary><p>No. Two sheet pans, a big pot, a pan, a muffin tin and some containers. An air fryer works for the sheet-pan recipes too.</p></details>
+    <details><summary>Is this medical advice?</summary><p>No. It is general nutrition education for healthy adults. If you have a medical condition, are pregnant or take medication, check with your doctor or a registered dietitian first.</p></details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="links"><a href="legal.html#imprint">Imprint</a><a href="legal.html#privacy">Privacy</a><a href="legal.html#terms">Terms &amp; refunds</a></div>
+    <p>&copy; <span id="y"></span> Prepwell. The information on this site and in our products is for general educational purposes and is not medical advice. Nutrition values are approximate.</p>
+  </div>
+</footer>
+
+<div class="sticky"><b>Protein Prep Blueprint &middot; $19</b><a class="btn small js-buy" href="#buy">Get it</a></div>
+
+<script>
+  // ====== PASTE YOUR LINKS HERE (see LAUNCH.md, step 3) ======
+  var CHECKOUT_URL = "";   // e.g. "https://yourname.gumroad.com/l/protein-prep-blueprint"
+  var FREE_URL = "";       // e.g. "https://yourname.gumroad.com/l/protein-cheat-sheet" (collects emails). Empty = direct PDF download.
+
+  document.getElementById("y").textContent = new Date().getFullYear();
+  if (CHECKOUT_URL) document.querySelectorAll(".js-buy").forEach(function (a) {
+    // Header and sticky buttons scroll to the offer; offer button goes to checkout.
+    if (a.closest("#buy")) a.href = CHECKOUT_URL;
+  });
+  if (FREE_URL) document.querySelectorAll(".js-free").forEach(function (a) { a.href = FREE_URL; });
+</script>
+</body>
+</html>
